@@ -1,16 +1,18 @@
-﻿import subprocess
+import subprocess
 import sys
 import os
 import json
 import requests
 from datetime import datetime
 
-BASE        = r"D:\Project\Project_01\PGDATA#1"
+# --- CONFIGURATION (SENSITIVE DATA REMOVED) ---
+BASE        = r"" # Isi dengan path folder proyekmu
 PIPELINE    = os.path.join(BASE, "pipeline")
 DIGEST_FILE = os.path.join(BASE, "out", "alerts_digest.json")
 
-BOT_TOKEN = "8500116368:AAFX--E_lOpERe9h0tzXRKync1DnTYXhrGk"
-CHAT_ID   = "6216327221"
+BOT_TOKEN = "" # Isi dengan Telegram Bot Token kamu
+CHAT_ID   = "" # Isi dengan Chat ID tujuan
+# ----------------------------------------------
 
 def run(script_name):
     script_path = os.path.join(PIPELINE, script_name)
@@ -122,7 +124,7 @@ if __name__ == "__main__":
 
     print(f"\n{'='*55}")
     print(f"  [OK] PIPELINE COMPLETED")
-    print(f"  Output : {BASE}\\out\\")
+    print(f"  Output : {os.path.join(BASE, 'out')}")
     print(f"  End    : {datetime.now().strftime('%H:%M:%S')}")
     print(f"{'='*55}\n")
 
