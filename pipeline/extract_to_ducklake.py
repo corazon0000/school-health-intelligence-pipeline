@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 from datetime import datetime, timezone
 
@@ -6,12 +6,13 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import duckdb
 
+# --- CONFIGURATION (SENSITIVE DATA REMOVED) ---
 PG = {
-    "host":     "192.168.50.131",
+    "host":     "", # Isi dengan IP/Host Database
     "port":     5432,
-    "db":       "kp",
-    "user":     "postgres",
-    "password": "postgres",
+    "db":       "", # Isi dengan nama Database
+    "user":     "", # Isi dengan Username
+    "password": "", # Isi dengan Password
 }
 
 LAKE_DIR     = "lake"
@@ -19,6 +20,7 @@ DATA_DIR     = os.path.join(LAKE_DIR, "data")
 CATALOG_PATH = os.path.join(LAKE_DIR, "metadata.ducklake")
 OUT_DIR      = "out"
 RUN_HISTORY  = os.path.join(OUT_DIR, "run_history.csv")
+# ----------------------------------------------
 
 QUERIES = {
     "kp_mstr_school": """
@@ -125,9 +127,13 @@ def main():
 
     print("\n[1] Connecting to Postgres...")
     engine = get_engine()
-    with engine.connect() as conn:
-        conn.execute(text("SELECT 1"))
-    print(f"    OK - {PG['host']}:{PG['port']}/{PG['db']}\n")
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        print(f"    OK - {PG['host']}:{PG['port']}/{PG['db']}\n")
+    except Exception as e:
+        print(f"    FAILED to connect to Postgres: {e}")
+        return
 
     print("[2] Setup DuckLake catalog...")
     con = setup_ducklake()
@@ -146,7 +152,7 @@ def main():
             register_view(con, name)
 
             print(f"     rows    : {len(df):,}")
-            print(f"     saved   : {path}\n")
+            print(f"     saved   : {path}\\n")
 
             append_run_history({
                 "run_time": run_time,
@@ -157,7 +163,7 @@ def main():
             })
 
         except Exception as e:
-            print(f"     ERROR: {e}\n")
+            print(f"     ERROR: {e}\\n")
             append_run_history({
                 "run_time": run_time,
                 "table":    name,
